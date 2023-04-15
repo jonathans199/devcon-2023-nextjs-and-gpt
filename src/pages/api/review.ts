@@ -9,11 +9,10 @@ export default async function handler(
 	res: NextApiResponse<ChatCompletionResponseMessage | undefined>
 ) {
 	openai
-		.createImage({
-			prompt: req.body,
-			n: 1,
-			size: '512x512',
+		.createChatCompletion({
+			model: 'gpt-3.5-turbo',
+			messages: [{ role: 'user', content: `write a review with these details:  ${req.body}` }],
 		})
-		.then((response: any) => res.status(200).send(response.data.data))
+		.then(response => res.status(200).send(response.data.choices[0].message))
 		.catch(err => console.error(err))
 }

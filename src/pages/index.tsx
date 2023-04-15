@@ -6,23 +6,23 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 	const [loading, setLoading] = React.useState<boolean>(false)
-	const [userCode, setUserCode] = React.useState<string>('')
+	const [userReview, setUserReview] = React.useState<string>('')
 	const [gptResponse, setGptResponse] = React.useState<any>([])
 
 	const handleTextInput = (e: React.FormEvent<string>) => {
-		setUserCode(e.target.value)
+		setUserReview(e.target.value)
 	}
 
 	const handleCodeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		setLoading(true)
 		setGptResponse({})
 		e.preventDefault()
-		const res = await fetch(`/api/image`, {
+		const res = await fetch(`/api/review`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(userCode),
+			body: JSON.stringify(userReview),
 		})
 
 		const data = await res.json()
@@ -44,16 +44,19 @@ export default function Home() {
 			<section>
 				<div className='mx-auto max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8'>
 					<div className='grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16'>
-						<div className='relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full'>
+						<div className=' lg:py-24 relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full'>
 							{loading && <Spinner />}
 
-							{gptResponse[0] && (
-								<img alt='Party' src={gptResponse[0].url} className='absolute inset-0 h-full w-full object-cover' />
+							{gptResponse.content && (
+								<>
+									<h2 className='font-extrabold text-red-700 sm:block'>Review here: </h2>
+									<p className='text-left '>{gptResponse.content}</p>
+								</>
 							)}
 						</div>
 
 						<div className='lg:py-24'>
-							<h2 className='text-3xl font-bold sm:text-4xl'>Generate an Image</h2>
+							<h2 className='text-3xl font-bold sm:text-4xl'>Generate Restaurant Review</h2>
 							<div>
 								<label className='sr-only'>Message</label>
 
@@ -69,12 +72,6 @@ export default function Home() {
 								Simply type in a description of the image you want to create, and the app will use its AI technology to
 								bring your vision to life.
 							</p>
-							{gptResponse.content && (
-								<>
-									<h2 className='font-extrabold text-red-700 sm:block'>Explanation here: </h2>
-									<p className='text-left '>{gptResponse.content}</p>
-								</>
-							)}
 
 							<button
 								className='block w-full rounded bg-red-600 px-12 py-3 my-3 text-sm font-medium text-white shadow hover:bg-red-700 focus:outline-none focus:ring active:bg-red-500 sm:w-auto'
