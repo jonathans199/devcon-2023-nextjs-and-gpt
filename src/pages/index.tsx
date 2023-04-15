@@ -1,19 +1,15 @@
 import * as React from 'react'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 	const [loading, setLoading] = React.useState<boolean>(false)
 	const [userReview, setUserReview] = React.useState<string>('')
-	const [gptResponse, setGptResponse] = React.useState<any>([])
+	const [gptResponse, setGptResponse] = React.useState<any>({})
 
 	const handleTextInput = (e: React.FormEvent<string>) => {
-		setUserReview(e.target.value)
+		setUserReview((e.target as HTMLInputElement).value)
 	}
 
-	const handleCodeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleCodeSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		setLoading(true)
 		setGptResponse({})
 		e.preventDefault()
@@ -44,41 +40,35 @@ export default function Home() {
 			<section>
 				<div className='mx-auto max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8'>
 					<div className='grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16'>
-						<div className=' lg:py-24 relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full'>
-							{loading && <Spinner />}
-
-							{gptResponse.content && (
-								<>
-									<h2 className='font-extrabold text-red-700 sm:block'>Review here: </h2>
-									<p className='text-left '>{gptResponse.content}</p>
-								</>
-							)}
-						</div>
-
 						<div className='lg:py-24'>
-							<h2 className='text-3xl font-bold sm:text-4xl'>Generate Restaurant Review</h2>
+							<h2 className='text-3xl mb-3 font-bold sm:text-4xl'>Generate Restaurant Review</h2>
 							<div>
-								<label className='sr-only'>Message</label>
-
 								<textarea
 									className='w-full rounded-lg border-gray-200 p-3 text-sm text-gray-500'
 									onChange={(e: any) => handleTextInput(e)}
 									placeholder='Message'
 									id='message'></textarea>
 							</div>
-
 							<p className='mt-4 text-gray-600'>
 								This is new app that uses artificial intelligence to create stunning images from text descriptions.
 								Simply type in a description of the image you want to create, and the app will use its AI technology to
 								bring your vision to life.
 							</p>
-
 							<button
 								className='block w-full rounded bg-red-600 px-12 py-3 my-3 text-sm font-medium text-white shadow hover:bg-red-700 focus:outline-none focus:ring active:bg-red-500 sm:w-auto'
-								// type='submit'
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleCodeSubmit(e)}>
 								send
 							</button>
+						</div>
+
+						<div className=' lg:py-24 relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full'>
+							{loading && <Spinner />}
+							{gptResponse.content && (
+								<>
+									<h2 className='font-extrabold text-red-700 sm:block'>Review here: </h2>
+									<p className='text-left '>{gptResponse.content}</p>
+								</>
+							)}
 						</div>
 					</div>
 				</div>
